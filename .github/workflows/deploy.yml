@@ -7,29 +7,19 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to EC2
     runs-on: ubuntu-latest
     
     steps:
-    - name: Install SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
-        chmod 600 ~/.ssh/deploy_key
-        ssh-keyscan -H 3.111.157.102 >> ~/.ssh/known_hosts
-      
-    - name: Connect and Deploy
-      run: |
-        ssh -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key ubuntu@3.111.157.102 '
-          cd /var/www/app1 &&
-          sudo chown -R ubuntu:ubuntu . &&
-          git fetch origin main &&
-          git reset --hard origin/main &&
-          cd /var/www/app2 &&
-          sudo chown -R ubuntu:ubuntu . &&
-          git fetch origin main &&
-          git reset --hard origin/main &&
-          sudo chown -R www-data:www-data /var/www &&
-          sudo systemctl restart php8.2-fpm &&
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: 3.111.157.102
+        username: ubuntu
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd /var/www/app1
+          git pull origin main
+          cd /var/www/app2
+          git pull origin main
+          sudo systemctl restart php8.2-fpm
           sudo systemctl reload nginx
-        '
