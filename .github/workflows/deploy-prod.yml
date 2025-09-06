@@ -16,15 +16,22 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
+          # Fix git ownership and safe directory issues
           cd /var/www/app1
-          sudo git pull origin main
-          sudo chown -R www-data:www-data .
-          sudo chmod -R 775 .
+          sudo git config --global --add safe.directory /var/www/app1
+          sudo git config --global --add safe.directory /var/www/app2
+          sudo chown -R ubuntu:ubuntu .
+          git pull origin main
           
           cd /var/www/app2
-          sudo git pull origin main
-          sudo chown -R www-data:www-data .
-          sudo chmod -R 775 .
+          sudo chown -R ubuntu:ubuntu .
+          git pull origin main
           
+          # Set proper permissions
+          sudo chown -R www-data:www-data /var/www/app1
+          sudo chown -R www-data:www-data /var/www/app2
+          sudo chmod -R 775 /var/www/app1
+          sudo chmod -R 775 /var/www/app2
+          
+          # Restart PHP-FPM only
           sudo systemctl restart php8.2-fpm
-          sudo systemctl reload nginx
