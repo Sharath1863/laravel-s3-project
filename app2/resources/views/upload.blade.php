@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>S3 File Upload System</title>
+    <title>AWS S3 Upload Portal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
          <div class="upload-container">
-        <h2>Welcome to S3 File Upload System</h2>
+        <h2>Welcome to AWS S3 Upload Portal - Test Deployment</h2>
         
         @if(session('success'))
             <div class="alert alert-success">
