@@ -1,0 +1,23 @@
+name: Production Deployment
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy using SSH
+        uses: fifsky/ssh-action@master
+        with:
+          command: |
+            cd /var/www/app1
+            git pull origin main
+            cd /var/www/app2
+            git pull origin main
+            sudo systemctl restart php8.2-fpm
+            sudo systemctl reload nginx
+          host: 3.111.157.102
+          user: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
