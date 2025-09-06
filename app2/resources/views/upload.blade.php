@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>File Upload</title>
+    <title>S3 File Upload System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
          <div class="upload-container">
-        <h2>Upload File</h2>
+        <h2>Welcome to S3 File Upload System</h2>
         
         @if(session('success'))
             <div class="alert alert-success">
